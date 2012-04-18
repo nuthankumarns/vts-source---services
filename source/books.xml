@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RecentBooks>
+  <Book>
+    <Title>My Cool Book Title</Title>
+    <Description>The my cool book is possibly the best cool book in that any developer could use to be a great web designer.</Description>
+    <Date>12/1/2010</Date>
+  </Book>
+  <Book>
+    <Title>Another PHP book</Title>
+    <Description>Learn everything about PHP with 'Another PHP book,' your ultimate guide to the ins and outs of PHP.</Description>
+    <Date>4/1/2010</Date>
+  </Book>
+  <Book>
+    <Title>jQuery Techniques</Title>
+    <Description>jQuery techniques runs you through real life examples of jQuery from beginner to expert</Description>
+    <Date>6/2/2010</Date>
+  </Book>
+  <Book>
+    <Title>MySQL Database Book</Title>
+    <Description>Brush up your knowledge with the best MySQL database book on the market.</Description>
+    <Date>14/2/2010</Date>
+  </Book>
+</RecentBooks>
