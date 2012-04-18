@@ -1,0 +1,154 @@
+#!/usr/bin/perl
+
+use IO::Socket::INET;
+
+# flush after every write
+$| = 1;
+
+my ($socket,$client_socket);
+my ($peeraddress,$peerport);
+my $LOGFILE="/home/nuthan/program/input.log";
+open (LOG,">>$LOGFILE");
+#this is nuthan
+print "uthan";
+#print LOG "Test\n";
+# creating object interface of IO::Socket::INET modules which internally does
+# socket creation, binding and listening at the specified port address.
+#$socket = new IO::Socket::INET ( LocalHost => '118.102.132.147', LocalPort => '11050', Proto => 'tcp', Listen => 5, Blocking => 1,Timeout => 5) or die "ERROR in Socket Creation : $!\n";
+$socket = new IO::Socket::INET ( LocalHost => '118.102.132.147', LocalPort => '11050', Proto => 'tcp', Listen => 500, Reuse => 1, Blocking => 0, Timeout => 2 ) or die "ERROR in Socket 
+Creation : $!\n";
+#$socket = new IO::Socket::INET ( LocalHost => 'localhost', LocalPort => '11050', Proto => 'tcp', Listen => 500, Reuse => 1, Blocking => 0 ) or die "ERROR in Socket Creation : $!\n";
+#$socket = new IO::Socket::INET ( LocalPort => '11050', Proto => 'tcp', Listen => 500, Reuse => 1, Blocking => 0 ) or die "ERROR in Socket Creation : $!\n";
+
+print "SERVER Waiting for client connection on port 11050";
+#EMI's code(15 numbers)#username#status#password#data type#data volume#base station information#longitude, E,latitude, N, speed, direction#date#time##
+#356823033046306##0#0000#AUT#1#V#07734.7024,E,1259.5437,N,000.00,326#211011#081501##
+while(1)
+{
+# waiting for new client connection.
+
+	$client_socket = $socket->accept();
+	#print "SOCKET $client_socket SOCKET\n";	
+	if (! $client_socket){
+		next;
+	}
+#print $client_socket;
+# get the host and port number of newly connected client.
+#$peer_address = $client_socket->peerhost();
+#$peer_port = $client_socket->peerport();
+
+#print "Accepted New Client Connection From : $peer_address, $peer_port\n ";
+
+# write operation on the newly accepted client.
+#$data = "DATA from Server";
+#print $client_socket "$data\n";
+# we can also send the data through IO::Socket::INET module,
+# $client_socket->send($data);
+
+# read operation on the newly accepted clien
+#$data = <$client_socket>;
+# we can also read from socket through recv()  in IO::Socket::INET
+# Received from Client : #356823033046306##0#0000#AUT#1#V#07734.7000,E,1259.5355,N,000.00,288#211011#085017##
+#EMI's code(15 numbers)#username#status#password#data type#data volume#base station information#longitude, E,latitude, N, speed, direction#date#time##
+ $client_socket->recv($data,1500);
+print  "Received from Client : $data\n";
+#print LOG "Received from Client : $data\n";
+my ($blah,$EMI,$username,$status,$password,$data_type,$data_volume,$base_station_info,$dir,$date,$time,$blah1)=split(/\#/,$data);
+#print "$EMI,$username,$status,$password,$data_type,$data_volume,$base_station_info,$dir,$date,$time\n";
+
+#do_post($EMI,$dir,$date,$time);
+#do_soap($EMI,$dir,$date,$time);
+#new_do_post($EMI,$dir,$date,$time);
+#print $data;
+new_do_get($EMI,$dir,$date,$time);
+}
+
+sub do_post(){
+my $EMI = $_[0];
+my $dir = $_[1];
+my $date = $_[2];
+my $time = $_[3];
+my ($longitude,$e,$latitude,$n,$speed,$direction)=split(/\,/,$dir);
+use  HTTP::Request::Common qw(POST);
+use LWP::UserAgent;
+$ua = LWP::UserAgent->new;
+print "Latitude $latitude, longitude $longitude imei $EMI date $date time $time v $speed\n"; 
+  my $content = "http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed&t=$time";
+#my $req = POST '$content';
+my $req = POST 'http://118.102.132.147/vehicle/location.php', [ lt => '$latitude', ln =>'$longitude',imei=>'$EMI',d=>'$date',t=>'$time',o=>'0',v=>'$speed'];
+ 
+print $ua->request($req)->as_string;
+}
+sub do_soap(){
+my $EMI = $_[0];
+my $dir = $_[1];
+my $date = $_[2];
+my $time = $_[3];
+my ($longitude,$e,$latitude,$n,$speed,$direction)=split(/\,/,$dir);
+
+  use SOAP::Lite;
+
+  print "http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed\n";
+  print SOAP::Lite
+    -> uri('http://118.102.132.147')
+    -> proxy('http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed')
+    -> hi()
+    -> result;
+}
+sub new_do_get(){
+print "In new_do_get\n";
+ @months = qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec);
+ @weekDays = qw(Sun Mon Tue Wed Thu Fri Sat Sun);
+ ($second, $minute, $hour, $dayOfMonth, $month, $yearOffset, $dayOfWeek, $dayOfYear, $daylightSavings) = localtime();
+ $year = 1900 + $yearOffset;
+ $theTime = "$hour:$minute:$second, $weekDays[$dayOfWeek] $months[$month] $dayOfMonth, $year\n";
+# print $theTime;
+my $EMI = $_[0];
+my $dir = $_[1];
+my $date = $_[2];
+my $time = $_[3];
+my ($longitude,$e,$latitude,$n,$speed,$direction)=split(/\,/,$dir);
+  my $url = "http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed&t=$time";
+# print "$url\n";
+use LWP::Simple;
+  my $content = get $url;
+  die "Couldn't get $url" unless defined $content;
+
+  # Then go do things with $content, like this:
+
+ # if($content =~ m/jazz/i) {
+ #   print "They're talking about jazz today on Fresh Air!\n";
+ # } else {
+ #   print "Fresh Air is apparently jazzless today.\n";
+ # }
+}
+ 
+sub new_do_post(){ 
+my $EMI = $_[0];
+my $dir = $_[1];
+my $date = $_[2];
+my $time = $_[3];
+my ($longitude,$e,$latitude,$n,$speed,$direction)=split(/\,/,$dir);
+  my $content = "http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed&t=$time";
+  # Create a user agent object
+  use LWP::UserAgent;
+  $ua = new LWP::UserAgent;
+  $ua->agent("AgentName/0.1 " . $ua->agent);
+
+  # Create a request
+  my $req = new HTTP::Request POST => 'http://118.102.132.147/vehicle/location.php?ln=$longitude&lt=$latitude&imei=$EMI&d=$date&o=0&v=$speed&t=$time';
+  $req->content_type('application/x-www-form-urlencoded');
+  $req->content('match=www&errors=0');
+
+  # Pass request to the user agent and get a response back
+  my $res = $ua->request($req);
+
+  # Check the outcome of the response
+  if ($res->is_success) {
+      print $res->content;
+  } else {
+      print "Bad luck this time\n";
+  }
+}
+$socket->close();
+close LOG;

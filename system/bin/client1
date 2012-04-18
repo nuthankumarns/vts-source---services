@@ -1,0 +1,63 @@
+#!/bin/sh
+set PATH=/usr/bin/perl
+#export PATH
+export PATH=/bin:/bin
+#SHELL=/bin/bash
+#PATH=/bin:/sbin:/usr/bin:/usr/sbin
+#HOME=/var/log
+
+
+/home/nuthan/clients/client1
+/home/nuthan/clients/client2
+/home/nuthan/clients/client3
+/home/nuthan/clients/client4
+/home/nuthan/clients/client5
+/home/nuthan/clients/client6
+/home/nuthan/clients/client7
+/home/nuthan/clients/client8
+/home/nuthan/clients/client9
+/home/nuthan/clients/client10
+/home/nuthan/clients/client11
+/home/nuthan/clients/client12
+/home/nuthan/clients/client13
+/home/nuthan/clients/client14
+/home/nuthan/clients/client15
+/home/nuthan/clients/client16
+/home/nuthan/clients/client17
+/home/nuthan/clients/client18
+/home/nuthan/clients/client19
+/home/nuthan/clients/client20
+/home/nuthan/clients/client21
+/home/nuthan/clients/client22
+/home/nuthan/clients/client23
+/home/nuthan/clients/client24
+/home/nuthan/clients/client25
+/home/nuthan/clients/client26
+/home/nuthan/clients/client27
+/home/nuthan/clients/client28
+/home/nuthan/clients/client29
+/home/nuthan/clients/client30
+/home/nuthan/clients/client31
+/home/nuthan/clients/client32
+/home/nuthan/clients/client33
+/home/nuthan/clients/client34
+/home/nuthan/clients/client35
+/home/nuthan/clients/client36
+/home/nuthan/clients/client37
+/home/nuthan/clients/client38
+/home/nuthan/clients/client39
+/home/nuthan/clients/client40
+/home/nuthan/clients/client41
+/home/nuthan/clients/client42
+/home/nuthan/clients/client43
+/home/nuthan/clients/client44
+/home/nuthan/clients/client45
+/home/nuthan/clients/client46
+/home/nuthan/clients/client47
+/home/nuthan/clients/client48
+/home/nuthan/clients/client49
+/home/nuthan/clients/client50
+
+#perl home/nuthan/client1
+#* * * * * server 2>&1 >> /var/log/client.log
+
